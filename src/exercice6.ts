@@ -74,49 +74,69 @@ getOrderAddress: recibe un objeto clientsOrdersAddresses, una id de cliente y un
 
 const categories = ["children", "adults", "pets"] as const;
 
-type Id = string | number
+type Id = number
 
-type Client = {
-    id: number,
-    name: string,
-    adress: string
-}
+type CategoriesProducts = Record<Category, number>
 
-type CategoriesProducts = {
-    adults: number,
-    children: number,
-    pets: number,
-}
+type Category = typeof categories[number];
 
 type Product = {
-    id: Id,
-    name: string,
-    category: CategoriesProducts,
-    price: string
-    stock: number,
+  id: Id,
+  name: string,
+  category: Category,
+  price: number
+  stock: number,
+}
+
+const product1: Product = {
+  id: 1,
+  category:"adults" ,
+  name: "joystick manual",
+  price: 69,
+  stock: 69
 }
 
 type PreOrderProduct = Pick<Product, 'id' | 'stock'>
 
 type PreOrder = {
-    clientId: Client['id'],
-    date: Date,
-    products?: PreOrderProduct[],
-    total?: string
+  clientId: Client['id'],
+  date: Date,
+  products?: PreOrderProduct[],
+  total?: number
 }
 
 type Order = Required<PreOrder> & {
-    id: Id,
-    address: string    
+  id: Id,
+  address: string    
 }
 
-type ClientOrderAdress = Record<Id, Record<Id, {products:PreOrderProduct[], address:string }>>
+type Client = {
+  id: Id,
+  name: string,
+  address: string
+}
+
+type ClientOrderAdress = Record<Id, Record<Id, {products:Product[], address:Client["address"] }>>
+
+const clientsOrdersAddresses: ClientOrderAdress = {
+  13: {  // id de cliente
+    45: {  // id de pedido
+      products: [product1], // array con los productos del pedido
+      address: "..." // la dirección del pedido
+    },
+    67: {
+      products: [product1],
+      address: "..."
+    }
+  },
+}
+
 
 
 function addLineToPreOrder(order: Order, productId: Id, cuantities: number): void
 function addLineToPreOrder(order: PreOrder, productId: Id, cuantities: number): void
 function addLineToPreorder(order: Order | PreOrder, productId: Id, cuantities: number): {productId: Id, cuantities: number} {
-
+  
     if(typeof order === ) { throw new Error }
     return {productId, cuantities}
 }
